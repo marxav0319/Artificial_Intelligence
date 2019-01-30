@@ -45,7 +45,7 @@
 					
 					\item The \textbf{branching factor} is 2, since at each step we assign a given task to one of the two processors.
 					
-					\item The \textbf{depth of the goal node} may not be known initially for some arbitrary numbers of processors and tasks, as they constricting condition of $task.length/processor.speed$ being less than $D$ overall needs to be maintained, and will depend on the varying speeds and lengths encountered.  All tasks may be assigned to a single processor, and yet another solution for the same case may have a 50-50 split between two processors or more.
+					\item The \textbf{depth of the goal node} is known initially in some cases where a solution exists.  If a solution exists, then all tasks are assigned a processor, and therefore the depth of the goal node is 4, since there are 4 edges from the goal node to the root node.  Of course if no solution exists, then the goal node does not exist and it's depth is undefined.
 				\end{itemize}
 			
 				\item State space with depth-first search:
