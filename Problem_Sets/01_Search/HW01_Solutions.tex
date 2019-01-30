@@ -39,7 +39,7 @@
 					
 					In other words, assuming $p_i$ to be some processor in the set of processors $P$, and $t_j$ to be some task in the set of tasks $T$, and defining $t_j \in p_i$ as task $t_j$ being assigned to $p_i$, the operation of assigning $t_j \in p_i$ is only allowed if the following inequality is maintained:
 					
-					$$(\sum_{p \in P}\sum_{t \in p}t.length/p.speed) < D$$
+					$$\forall p \in P, \bigg(\sum_{t \in p}t.length/p.speed\bigg) < D$$
 					
 					Where $D$ is the deadline time.
 					
