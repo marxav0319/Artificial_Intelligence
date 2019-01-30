@@ -1,0 +1,53 @@
+\documentclass{article}
+
+\usepackage[margin=1in]{geometry}
+
+\title{Problem Set 1}
+\author{Mark Xavier (xaviem01)}
+
+\begin{document}
+	\maketitle
+	
+	\begin{enumerate}
+		\item Problem 1
+		
+			\begin{center}
+				\begin{tabular}{|c|c|c|c|c|}
+					\hline
+					Task & T1 & T2 & T3 & T4 \\
+					\hline
+					Length & 12 & 42 & 48 & 54 \\
+					\hline
+				\end{tabular}
+			
+				\begin{tabular}{|c|c|c|}
+					\hline
+					Processor & P1 & P2 \\
+					\hline
+					Speed & 2 & 3 \\
+					\hline
+				\end{tabular}
+			\end{center}
+		
+			\begin{enumerate}
+				\item Characterize tree structures state space problem.
+				
+				\begin{itemize}
+					\item The \textbf{states} are characterized as as either the empty state (no tasks assigned to the any processors) or a partially filled state (some $n$ tasks assigned to $m$ processors).  Technically the goal state (the state where all tasks are assigned some processor and the total time taken is less than deadline time $D$) is also a state. 
+					
+					\item The \textbf{operators} (or operations) are defined as actions that assign a given task to a processor, such that the time taken by that processor to finish the task plus the sum of times for all other tasks assigned to that processor do not take time $D$ or more to finish.
+					
+					In other words, assuming $p_i$ to be some processor in the set of processors $P$, and $t_j$ to be some task in the set of tasks $T$, and defining $t_j \in p_i$ as task $t_j$ being assigned to $p_i$, the operation of assigning $t_j \in p_i$ is only allowed if the following inequality is maintained:
+					
+					$$(\sum_{p \in P}\sum_{t \in p}t.length/p.speed) < D$$
+					
+					Where $D$ is the deadline time.
+					
+					\item The \textbf{branching factor} is 2, since at each step we assign a given task to one of the two processors.
+					
+					\item The \textbf{depth of the goal node} may not be known initially for some arbitrary numbers of processors and tasks, as they constricting condition of $task.length/processor.speed$ being less than $D$ overall needs to be maintained, and will depend on the varying speeds and lengths encountered.  All tasks may be assigned to a single processor, and yet another solution for the same case may have a 50-50 split between two processors or more.
+				\end{itemize}
+			\end{enumerate}
+		
+	\end{enumerate}
+\end{document}
