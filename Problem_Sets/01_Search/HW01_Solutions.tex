@@ -47,6 +47,12 @@
 					
 					\item The \textbf{depth of the goal node} may not be known initially for some arbitrary numbers of processors and tasks, as they constricting condition of $task.length/processor.speed$ being less than $D$ overall needs to be maintained, and will depend on the varying speeds and lengths encountered.  All tasks may be assigned to a single processor, and yet another solution for the same case may have a 50-50 split between two processors or more.
 				\end{itemize}
+			
+				\item State space with depth-first search:
+				
+				{\tt O --- T1 to P1 (6) --- T2 to P1 (27) --- T3 to P1 (51 - fail)\\
+														  |-- T3 to P2 (27,16) --- T4 to P2 (27, 34 - fail)
+				}
 			\end{enumerate}
 		
 	\end{enumerate}
