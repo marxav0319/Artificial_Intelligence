@@ -61,6 +61,20 @@
 					                                                            |
 					                                                            |-- T4 to P2(30, 32 - PASS)
 				\end{verbatim}
+				
+				\item State space with breadth-first search:
+				
+				\begin{verbatim}
+				O --- T1 to P1 (6,0) --- T2 to P1 (27,0) --- T3 to P1 (51,0 - Fail)
+				  |                  |                   |
+				  |                  |                   |-- --- T3 to P2 (27,16)
+				  |                  |
+				  |                  |-- T2 to P2 (6,14)
+				  |
+				  |-- T1 to P2 (0,4) --- T2 to P1 (14,4)
+				                     |
+				                     |-- T2 to P2 (0,18)
+				\end{verbatim}
 			\end{enumerate}
 		
 	\end{enumerate}
