@@ -1,6 +1,7 @@
 \documentclass{article}
 
 \usepackage[margin=0.5in]{geometry}
+\usepackage{amsmath}
 
 \title{Problem Set 1}
 \author{Mark Xavier (xaviem01)}
@@ -39,7 +40,7 @@
 					
 					In other words, assuming $p_i$ to be some processor in the set of processors $P$, and $t_j$ to be some task in the set of tasks $T$, and defining $t_j \in p_i$ as task $t_j$ being assigned to $p_i$, the operation of assigning $t_j \in p_i$ is only allowed if the following inequality is maintained:
 					
-					$$\forall p \in P, \bigg(\sum_{t \in p}t.length/p.speed\bigg) < D$$
+					$$\text{for each } p \in P, \bigg(\sum_{t \in p}t.length/p.speed\bigg) < D$$
 					
 					Where $D$ is the deadline time.  If an unallowable assignment is made, breaking the above inequality, then a task must be removed from the processor in order to continue.
 					
@@ -101,7 +102,7 @@
 				
 				\item The \textbf{operators} are to assign a task to a processor or to remove a task from a processor so that it may be assigned elsewhere or left unassigned.  Assignments and re-assignments/unassignments follow from the inequality described above, so that 
 				
-				$$\bigg(\forall p \in P, \bigg(\sum_{t \in p} t.length/p.speed < D\bigg)\bigg) \wedge \sum_{t \in P} \bigg(t.length < S\bigg)$$
+				$$\text{for each } p \in P, \bigg(\sum_{t \in p} t.length/p.speed\bigg) < D \wedge \bigg(\sum_{t \in P} t.length\bigg) \geq S$$
 				
 				Where $t \in p$ denotes a task $t$ that is assigned to processor $p$, $t \in P$ denotes a task $t$ assigned to any processor $p$ in $P$, and $\wedge$ denotes the propositional logic symbol for "and".
 				
