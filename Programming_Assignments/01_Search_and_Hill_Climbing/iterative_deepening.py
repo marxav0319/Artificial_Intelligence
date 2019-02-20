@@ -2,15 +2,14 @@
 import sys
 import argparse
 
-from helpers import get_input
+from helpers import load_data
 
 def iterative_deepening(file_path):
     """
     """
 
-    tasks, processors, parameters = get_input(file_path)
-
-    return None
+    initial_state = load_data(file_path)
+    print initial_state
 
 def main():
     """
