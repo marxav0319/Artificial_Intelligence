@@ -95,7 +95,7 @@ class State:
         assert(self.processor_time_taken != None)
         if self.evaluate_processor_time_taken() and self.evaluate_task_target():
             self.goal_state = True
-            return self.goal_state
+        return self.goal_state
 
     def __str__(self):
         print_str = "\nProcessors\n"
