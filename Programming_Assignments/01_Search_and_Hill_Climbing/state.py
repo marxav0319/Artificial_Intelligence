@@ -91,7 +91,7 @@ class State:
 
     def evaluate_processor_time_taken(self):
         for time_taken in self.processor_time_taken:
-            if time_taken >= self.deadline:
+            if time_taken > self.deadline:
                 return False
             return True 
 
@@ -116,7 +116,7 @@ class State:
                 self.target_progress += task.length
         self.evaluate_state()
 
-    def write_goal_state(self):
+    def get_task_assignments(self):
         self.assignments = ""
         for task in self.tasks:
             if task.processor != None:
@@ -124,7 +124,7 @@ class State:
             else:
                 self.assignments += "0 "
 
-        print self.assignments
+        return self.assignments
 
     def __str__(self):
         print_str = "\nProcessors\n"
