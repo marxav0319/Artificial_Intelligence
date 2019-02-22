@@ -17,7 +17,6 @@ Author: Mark Xavier (xaviem01)
 
 import random
 import copy
-import sys
 
 class Processor:
     """

@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="H:\ISCHEMIA\Git_Repositories\github.css" type="text/css" />
+</head>
+<body>
+<h1 id="artificial-intelligence">Artificial Intelligence</h1>
+<h2 id="programming-assignment-1">Programming Assignment 1</h2>
+<p>Author: Mark Xavier (xaviem01)</p>
+<hr />
+<h2 id="requirements">Requirements:</h2>
+<ul>
+<li>Python-2.7 (all imports are standard including <code>argparse</code>, <code>copy</code>, <code>random</code>, and <code>sys</code>).</li>
+</ul>
+<hr />
+<h2 id="contents">Contents:</h2>
+<ul>
+<li><em>iterative_deepening.py</em> - Contains the entry-point and algorithm definition for iterative deepening.</li>
+<li><em>hill_climbing.py</em> - Contains the entry-point and algorithm definition for hill climbing.</li>
+<li><em>state.py</em> - Holds definition for the Processor, Task, and State classes used in the above two files.</li>
+<li><em>README.md</em> - Markdown for this README file.</li>
+<li><em>README.html</em> - HTML for this README file.</li>
+</ul>
+<hr />
+<h2 id="usage">Usage</h2>
+<p>The files iterative_deepening.py and hill_climbing.py hold the code that solves the assignment. They can be run directly from the shell, however both expect a command line argument denoting the text file with the state space definition (the list of tasks, processors, and parameters). In order to run the code, first ensure that all 3 .py files are in the same directory (without any other files that may cause name-clashing), then run:</p>
+<pre class="shell"><code>&gt; python iterative_deepening.py &lt;filepath&gt;
+&gt;
+&gt; # Or run
+&gt;
+&gt; python hill_climbing.py &lt;filepath&gt;
+</code></pre>
+<p>The output expected will either be processor assignments in the order of the tasks read in, or the the printout &quot;No solution&quot;:</p>
+<pre class="shell"><code>&gt; python iterative_deepening.py &lt;filepath&gt;
+&gt; 1 0 1 2
+&gt;
+&gt; # Or you might see
+&gt;
+&gt; python iterative_deepening.py &lt;filepath&gt;
+&gt; No solution</code></pre>
+</body>
+</html>
