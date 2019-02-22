@@ -1,3 +1,18 @@
+"""
+iterative_deepening.py
+
+Holds the finished algorithm for iterative deepening depth first search using the state.State class.
+
+Usage:
+    The script expects to be run as __main__ with a passed text file.  The script can be run by
+    navigating to the directory containing this script (along with the state.py file) and running:
+
+    > python iterative_deepening.py <file_path>.txt
+
+    The given output will be either a list of processor assignments or "No solution".
+
+Author: Mark Xavier (xaviem01)
+"""
 
 import sys
 import argparse
@@ -7,6 +22,14 @@ from state import State
 
 def iterative_deepening_depth_first_search(file_path):
     """
+    The function that generates the initial state, determines the depths to travel to, and calls
+    the depth limited search some number of times before exiting.
+
+    Args:
+        file_path <str>: filepath + filename + file_extension for state space generation.
+
+    Returns:
+        <state.State> if a goal state is reached, else None.
     """
 
     initial_state = State.load_from_file(file_path)
@@ -20,6 +43,19 @@ def iterative_deepening_depth_first_search(file_path):
 
 def depth_limited_search(state, depth, current_task):
     """
+    The depth first search called by the caller iterative deepening function.  This function runs
+    depth first search to a certain depth and tests whether or not the goal state is reached once
+    the depth is reached, if not we back out and continue deepening on other states/nodes.
+
+    Args:
+        state <state.State>: The state on which to attempt depth first search
+        depth <int>: The depth to travel to
+        current_task <int>: An integer index into the list of tasks held by the current state.  This
+                            index determines which task we are currently attempting to assing to a
+                            processor.
+
+    Returns:
+        state.State if a goal state is reached, else None.
     """
 
     if depth == 0:
@@ -52,6 +88,7 @@ def depth_limited_search(state, depth, current_task):
 
 def iterative_deepening():
     """
+    The main entry point for the iterative deepening algorithm.
     """
 
     parser = argparse.ArgumentParser(description="Run iterative deepening")
