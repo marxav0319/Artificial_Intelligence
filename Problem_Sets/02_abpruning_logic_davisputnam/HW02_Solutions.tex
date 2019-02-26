@@ -16,7 +16,7 @@
 		
 		\begin{center}
 			\begin{tikzpicture}
-				\Tree[.6 [.6 
+				\Tree[.7 [.6 
 				             [.6 
 				                 [.5 [.5 ] [.7 ]]  
 				                 [.2 [.2 ] [.9 ] ] 
@@ -24,16 +24,18 @@
 				             [.$\geq12$-prune 
 				                 [.12 [.12 ] ] 
 				                 [.prune [.9 ] [.2 ] ]]] 
-						 [.$\geq7$
+						 [.7
 						     [.10 
 						         [.3 [.3 ] [.8 ] ] 
 						         [.10 [.15 ] [.10 ]]] 
-						     [.$\geq7$-prune
+						     [.7
 						         [.7 [.20 ] [.7 ] [.12 ]] 
-						         [.prune [.4 ] [.10 ]]]] 
+						         [.4 [.4 ] [.10 ]]]] 
 					 ]
 			\end{tikzpicture}
 		\end{center}
+	
+		I only encountered one area that could be pruned (the node $\geq 12$) - in this case the best move for MAX is to take the right side tree and get a score of 7 as opposed to 6.
 	
 	\end{enumerate}
 	
