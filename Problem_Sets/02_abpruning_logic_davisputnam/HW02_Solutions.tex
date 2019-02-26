@@ -1,0 +1,40 @@
+\documentclass{article}
+
+\usepackage[margin=0.5in]{geometry}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+
+\title{Problem Set 1}
+\author{Mark Xavier (xaviem01)}
+
+\begin{document}
+	
+	\maketitle
+	
+	\begin{enumerate}
+		\item Alpha-Beta Pruning - assuming we work left to right and we prune if we decide that a sub-tree is not worth reviewing:
+		
+		\begin{center}
+			\begin{tikzpicture}
+				\Tree[.6 [.6 
+				             [.6 
+				                 [.5 [.5 ] [.7 ]]  
+				                 [.2 [.2 ] [.9 ] ] 
+				                 [.6 [.6 ] [.8 ] ]] 
+				             [.$\geq12$-prune 
+				                 [.12 [.12 ] ] 
+				                 [.prune [.9 ] [.2 ] ]]] 
+						 [.$\geq7$
+						     [.10 
+						         [.3 [.3 ] [.8 ] ] 
+						         [.10 [.15 ] [.10 ]]] 
+						     [.$\geq7$-prune
+						         [.7 [.20 ] [.7 ] [.12 ]] 
+						         [.prune [.4 ] [.10 ]]]] 
+					 ]
+			\end{tikzpicture}
+		\end{center}
+	
+	\end{enumerate}
+	
+\end{document}
