@@ -119,7 +119,6 @@ class Sentences:
     def propogate(self, atom, assignment):
         """
         """
-        print atom.assignment
         clauses_to_keep = []
         for clause in self.clauses:
             if atom not in clause:
