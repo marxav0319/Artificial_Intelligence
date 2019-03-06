@@ -9,7 +9,7 @@ class Clause:
         self.compute_value()
 
     def is_empty(self):
-        return len(self.atoms == 0)
+        return len(self.atoms) == 0
 
     def compute_value(self):
         """

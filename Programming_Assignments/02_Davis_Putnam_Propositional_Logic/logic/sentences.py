@@ -53,7 +53,7 @@ class Sentences:
     def is_empty(self):
         """
         """
-        return len(self.clauses == 0)
+        return len(self.clauses) == 0
 
     def __str__(self):
         string = ''
