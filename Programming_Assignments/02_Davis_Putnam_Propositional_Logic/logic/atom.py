@@ -20,8 +20,17 @@ class Atom:
         self.assignment = val
         self.compute_value()
 
+    def auto_assign(self):
+        """
+        """
+        if self.neg == True:
+            self.assignment = False
+        else:
+            self.assignment = True
+        self.compute_value()
+
     def __str__(self):
-        return self.string + ' (' + str(self.value) + ') '
+        return self.string[-1] + ' ' + ('T' if self.assignment == True else 'F')
 
     def __eq__(self, other):
         """

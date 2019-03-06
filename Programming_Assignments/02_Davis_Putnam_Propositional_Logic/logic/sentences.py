@@ -1,5 +1,6 @@
 from atom import Atom
 from clause import Clause
+import copy
 
 class Sentences:
     """
@@ -9,11 +10,17 @@ class Sentences:
         self.clauses = clauses
         self.compute_value()
 
+    def update(self, clauses):
+        """
+        """
+        self.clauses = clauses
+        self.compute_value()
+
     def compute_value(self):
         """
         """
         for clause in self.clauses:
-            if clause.value == False:
+            if clause == [] or clause.value == False:
                 self.value = False
         self.value = True
 
@@ -73,8 +80,68 @@ class Sentences:
         """
         return len(self.clauses) == 0
 
+    def delete_clauses_containing_atom(self, atom):
+        """
+        """
+        clauses_to_keep = []
+        for clause in self.clauses:
+            if atom not in clause:
+                clauses_to_keep.append(clause)
+        self.update(clauses_to_keep)
+
+    def contains_empty_clause(self):
+        """
+        """
+        for clause in self.clauses:
+            if clause.is_empty():
+                return True
+
+        return False
+
+    def contains_clause_with_single_literal(self):
+        """
+        """
+        for clause in self.clauses:
+            if len(clause) == 1:
+                return True
+        return False
+
+    def assign_single_literal(self):
+        """
+        """
+        for clause in self.clauses:
+            if len(clause) == 1:
+                atom = clause.atoms[0]
+                atom.auto_assign()
+                return atom
+        return None
+
+    def propogate(self, atom, assignment):
+        """
+        """
+        print atom.assignment
+        clauses_to_keep = []
+        for clause in self.clauses:
+            if atom not in clause:
+                clauses_to_keep.append(clause)
+            else:
+                for a in clause.atoms:
+                    if a == atom:
+                        if (not a.neg) and (atom.assignment == True):
+                            continue
+                        elif (a.neg) and (atom.assignment == False):
+                            continue
+                        elif (not a.neg) and (atom.assignment == False):
+                            clauses_to_keep.append(clause.remove(a))
+                        elif (a.neg) and (atom.assignment == True):
+                            clauses_to_keep.append(clause.remove(a))
+        self.update(clauses_to_keep)
+
     def __str__(self):
         string = ''
         for clause in self.clauses:
             string += str(clause)
         return string
+
+    def __len__(self):
+        return len(self.clauses)
