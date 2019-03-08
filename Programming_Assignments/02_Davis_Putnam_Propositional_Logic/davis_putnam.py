@@ -5,7 +5,7 @@ Author: Mark Xavier
 """
 import copy
 
-from logic.sentences import Sentences
+from logic import Sentences
 
 def dp1(atoms, sentences):
     """
@@ -62,7 +62,7 @@ def dp1(atoms, sentences):
 def davis_putnam():
     """
     """
-    sentences = Sentences.read_from_file('test_inputs/input1')
+    sentences = Sentences.read_from_file('test_inputs/input2')
     atoms = sentences.get_unique_atoms()
     pure_literals = sentences.get_pure_literals()
 
