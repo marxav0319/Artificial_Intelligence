@@ -1,1 +1,2 @@
-from register import Register
+from value import Value
+from assign import Assign
