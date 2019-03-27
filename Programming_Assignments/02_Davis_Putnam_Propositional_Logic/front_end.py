@@ -101,6 +101,12 @@ def generate_axiom_2_clauses(names, values, value_atoms, assign_atoms, time):
     return clause
 
 
+def generate_axiom_3_clauses():
+    """
+    """
+    clause = ''
+    return clause
+
 def generate_clauses(start, end, time, all_value_atoms, all_assignment_atoms):
     """
     """
@@ -110,11 +116,14 @@ def generate_clauses(start, end, time, all_value_atoms, all_assignment_atoms):
     clauses += generate_value_clauses(end, all_value_atoms)
     clauses += generate_axiom_1_clauses(names, values, all_value_atoms, time)
     clauses += generate_axiom_2_clauses(names, values, all_value_atoms, all_assignment_atoms, time)
+    clauses += generate_axiom_3_clauses()
     print clauses
     return
 
 
 def main():
+    """
+    """
     start_state, end_state, time = read_input('test_inputs/fe_input_1')
     all_value_atoms = generate_value_atoms(start_state, time)
     all_assignment_atoms = generate_assignment_atoms(start_state, time, all_value_atoms[-1].id)
