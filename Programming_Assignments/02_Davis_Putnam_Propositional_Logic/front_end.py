@@ -31,10 +31,11 @@ def generate_assignment_atoms(start, time, last_id):
     all_assignment_atoms = []
 
     for i in xrange(0, time):
-        for j in xrange(0, len(regs)):
-            for k in xrange(1, len(regs)):
-                all_assignment_atoms.append(Assign(regs[j], regs[k], i, id))
-                id += 1
+        for reg_1 in regs:
+            for reg_2 in regs:
+                if reg_1 != reg_2:
+                    all_assignment_atoms.append(Assign(reg_1, reg_2, i, id))
+                    id += 1
 
     return all_assignment_atoms
 
@@ -61,11 +62,10 @@ def generate_value_clauses(start, all_value_atoms):
     return clause
 
 
-def generate_axiom_1_clauses(start, all_value_atoms, time):
+def generate_axiom_1_clauses(names, values, all_value_atoms, time):
     """
     """
     clause = ''
-    names, values = split_names_and_values(start)
     for t in xrange(0, time+1):
         for name in names:
             for i in xrange(len(values)):
@@ -80,20 +80,36 @@ def generate_axiom_1_clauses(start, all_value_atoms, time):
     return clause
 
 
-def generate_axiom_2_clauses(value_atoms, assign_atoms):
+def generate_axiom_2_clauses(names, values, value_atoms, assign_atoms, time):
     """
     """
     clause = ''
+    for atom in assign_atoms:
+        assign_time = atom.time
+        assign_lhs = atom.reg1
+        assign_rhs = atom.reg2
+
+        for value in values:
+            temp_assigner = Value(assign_rhs, value, assign_time, 0)
+            temp_result = Value(assign_lhs, value, assign_time + 1, 0)
+            temp_assigner_index = value_atoms.index(temp_assigner)
+            temp_result_index = value_atoms.index(temp_result)
+
+            clause += "%d -%d -%d\n" % (value_atoms[temp_result_index].id,
+                                      value_atoms[temp_assigner_index].id,
+                                      atom.id)
     return clause
 
 
 def generate_clauses(start, end, time, all_value_atoms, all_assignment_atoms):
     """
     """
+    names, values = split_names_and_values(start)
     clauses = ''
     clauses += generate_value_clauses(start, all_value_atoms)
     clauses += generate_value_clauses(end, all_value_atoms)
-    clauses += generate_axiom_1_clauses(start, all_value_atoms, time)
+    clauses += generate_axiom_1_clauses(names, values, all_value_atoms, time)
+    clauses += generate_axiom_2_clauses(names, values, all_value_atoms, all_assignment_atoms, time)
     print clauses
     return
 
