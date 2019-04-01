@@ -7,6 +7,8 @@ import copy
 
 from logic import Sentences
 
+INFILE = r'temp_outputs/clauses.txt'
+
 def dp1(atoms, sentences):
     """
     """
@@ -62,7 +64,7 @@ def dp1(atoms, sentences):
 def davis_putnam():
     """
     """
-    sentences = Sentences.read_from_file('test_inputs/input2')
+    sentences = Sentences.read_from_file(INFILE)
     atoms = sentences.get_unique_atoms()
     pure_literals = sentences.get_pure_literals()
 

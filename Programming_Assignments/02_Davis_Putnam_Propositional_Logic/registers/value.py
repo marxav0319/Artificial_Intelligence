@@ -20,4 +20,4 @@ class Value:
                     and (self.time == other.time))
 
     def __str__(self):
-        return "ID %d: R%d = %s at time %d" % (self.id, self.name, self.value, self.time)
+        return "R%d = %s at time %d" % (self.name, self.value, self.time)

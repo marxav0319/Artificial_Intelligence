@@ -1,6 +1,9 @@
 import copy
 from registers import Value, Assign
 
+OUTFILE = r'temp_outputs/clauses.txt'
+OUTFILE_T = r'temp_outputs/clauses_real.txt'
+
 def split_names_and_values(start):
     """
     """
@@ -21,7 +24,6 @@ def generate_value_atoms(start, time):
                 id += 1
 
     return all_value_atoms
-
 
 def generate_assignment_atoms(start, time, last_id):
     """
@@ -52,20 +54,23 @@ def read_input(filepath):
     return start_state, end_state, time
 
 
-def generate_value_clauses(start, all_value_atoms):
+def generate_value_clauses(start, all_value_atoms, time=0):
     """
     """
     clause = ''
+    verbose_clause = ''
     for i in xrange(0, len(start), 2):
-        atom = all_value_atoms[all_value_atoms.index(Value(int(start[i]), start[i+1], 0, 0))]
+        atom = all_value_atoms[all_value_atoms.index(Value(int(start[i]), start[i+1], time, 0))]
         clause += str(atom.id) + '\n'
     return clause
 
 
 def generate_axiom_1_clauses(names, values, all_value_atoms, time):
     """
+    Unique value axiom
     """
     clause = ''
+    verbose_clause = ''
     for t in xrange(0, time+1):
         for name in names:
             for i in xrange(len(values)):
@@ -82,6 +87,7 @@ def generate_axiom_1_clauses(names, values, all_value_atoms, time):
 
 def generate_axiom_2_clauses(names, values, value_atoms, assign_atoms, time):
     """
+    Positive effects of actions axiom
     """
     clause = ''
     for atom in assign_atoms:
@@ -101,10 +107,39 @@ def generate_axiom_2_clauses(names, values, value_atoms, assign_atoms, time):
     return clause
 
 
-def generate_axiom_3_clauses():
+def generate_axiom_3_clauses(names, values, value_atoms, assign_atoms, time):
     """
+    Frame axiom
     """
     clause = ''
+    for name in names:
+        for value in values:
+            for t in xrange(time):
+                start_atom = Value(name, value, t, 0)
+                end_atom = Value(name, value, t+1, 0)
+                clause += "-%d %d" % (value_atoms[value_atoms.index(start_atom)].id,
+                                      value_atoms[value_atoms.index(end_atom)].id)
+
+                relevant_assign = [atom for atom in assign_atoms if atom.reg1 == name and atom.time == t]
+                for atom in relevant_assign:
+                    clause += " %d" % (atom.id)
+                clause += "\n"
+    return clause
+
+def generate_axiom_4_clauses(names, values, value_atoms, assign_atoms, time):
+    """
+    Incompatible assignment axiom
+    """
+    clause = ''
+    for atom in assign_atoms:
+        lhs = atom.reg1
+        rhs = atom.reg2
+        assign_time = atom.time
+
+        relevant_atoms = [a for a in assign_atoms if a.time == assign_time and
+                          (a.reg1 == rhs or (a.reg1 == lhs and a.reg2 != rhs))]
+        for assignment in relevant_atoms:
+            clause += "-%d -%d\n" % (atom.id, assignment.id)
     return clause
 
 def generate_clauses(start, end, time, all_value_atoms, all_assignment_atoms):
@@ -113,13 +148,40 @@ def generate_clauses(start, end, time, all_value_atoms, all_assignment_atoms):
     names, values = split_names_and_values(start)
     clauses = ''
     clauses += generate_value_clauses(start, all_value_atoms)
-    clauses += generate_value_clauses(end, all_value_atoms)
+    clauses += generate_value_clauses(end, all_value_atoms, time)
     clauses += generate_axiom_1_clauses(names, values, all_value_atoms, time)
     clauses += generate_axiom_2_clauses(names, values, all_value_atoms, all_assignment_atoms, time)
-    clauses += generate_axiom_3_clauses()
-    print clauses
-    return
+    clauses += generate_axiom_3_clauses(names, values, all_value_atoms, all_assignment_atoms, time)
+    clauses += generate_axiom_4_clauses(names, values, all_value_atoms, all_assignment_atoms, time)
+    clauses += "0"
 
+    return clauses
+
+def write_clauses_to_file(clauses):
+    """
+    """
+    f = open(OUTFILE, 'w')
+    f.write(clauses)
+    f.close()
+
+def write_actual_clauses_to_file(clauses, all_atoms):
+    """
+    """
+    f = open(OUTFILE_T, 'w')
+    line_list = clauses.splitlines()
+    for line in line_list:
+        ids = line.strip().split(" ")
+        for id in ids:
+            prefix = ''
+            temp = id
+            if id[0] == '-':
+                temp = id[1:]
+                prefix = '-'
+            for atom in all_atoms:
+                if atom.id == int(temp):
+                    f.write(prefix + str(atom) + '; ')
+        f.write("\n")
+    f.close()
 
 def main():
     """
@@ -127,8 +189,9 @@ def main():
     start_state, end_state, time = read_input('test_inputs/fe_input_1')
     all_value_atoms = generate_value_atoms(start_state, time)
     all_assignment_atoms = generate_assignment_atoms(start_state, time, all_value_atoms[-1].id)
-    generate_clauses(start_state, end_state, time, all_value_atoms, all_assignment_atoms)
-
+    clauses = generate_clauses(start_state, end_state, time, all_value_atoms, all_assignment_atoms)
+    write_clauses_to_file(clauses)
+    write_actual_clauses_to_file(clauses, all_value_atoms + all_assignment_atoms)
 
 if __name__ == '__main__':
     main()
