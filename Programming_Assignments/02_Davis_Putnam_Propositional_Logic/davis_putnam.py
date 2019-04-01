@@ -8,6 +8,7 @@ import copy
 from logic import Sentences
 
 INFILE = r'temp_outputs/clauses.txt'
+OUTFILE = r'temp_outputs/davis_putnam_output.txt'
 
 def dp1(atoms, sentences):
     """
@@ -61,6 +62,14 @@ def dp1(atoms, sentences):
             if new_atoms != None:
                 return new_atoms
 
+def write_assignments(atoms):
+    """
+    """
+    f = open(OUTFILE, 'w')
+    for atom in atoms:
+        f.write(str(atom) + '\n')
+    f.close()
+
 def davis_putnam():
     """
     """
@@ -74,6 +83,9 @@ def davis_putnam():
     else:
         for atom in atoms_assigned:
             print atom
+
+    # Write 0 if no solution and the backtrack info
+    write_assignments(atoms_assigned)
 
     return
 

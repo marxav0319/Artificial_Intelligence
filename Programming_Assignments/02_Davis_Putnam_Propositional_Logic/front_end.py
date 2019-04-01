@@ -153,15 +153,20 @@ def generate_clauses(start, end, time, all_value_atoms, all_assignment_atoms):
     clauses += generate_axiom_2_clauses(names, values, all_value_atoms, all_assignment_atoms, time)
     clauses += generate_axiom_3_clauses(names, values, all_value_atoms, all_assignment_atoms, time)
     clauses += generate_axiom_4_clauses(names, values, all_value_atoms, all_assignment_atoms, time)
-    clauses += "0"
+    clauses += "0\n"
 
     return clauses
 
-def write_clauses_to_file(clauses):
+def write_clauses_to_file(clauses, all_atoms):
     """
     """
     f = open(OUTFILE, 'w')
     f.write(clauses)
+    for atom in all_atoms:
+        if isinstance(atom, Value):
+            f.write("%d V %d %s %d\n" % (atom.id, atom.name, atom.value, atom.time))
+        else:
+            f.write("%d A %d %d %d\n" % (atom.id, atom.reg1, atom.reg2, atom.time))
     f.close()
 
 def write_actual_clauses_to_file(clauses, all_atoms):
@@ -190,7 +195,7 @@ def main():
     all_value_atoms = generate_value_atoms(start_state, time)
     all_assignment_atoms = generate_assignment_atoms(start_state, time, all_value_atoms[-1].id)
     clauses = generate_clauses(start_state, end_state, time, all_value_atoms, all_assignment_atoms)
-    write_clauses_to_file(clauses)
+    write_clauses_to_file(clauses, all_value_atoms + all_assignment_atoms)
     write_actual_clauses_to_file(clauses, all_value_atoms + all_assignment_atoms)
 
 if __name__ == '__main__':

@@ -39,6 +39,8 @@ class Sentences:
                 for l in line:
                     clause.append(Atom(l))
             clauses.append(Clause(clause))
+
+        # Read in the rest of the file and store so that it can be re-written
         return cls(clauses)
 
     def get_unique_atoms(self):

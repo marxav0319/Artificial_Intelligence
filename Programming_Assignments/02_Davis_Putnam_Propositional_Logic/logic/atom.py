@@ -30,7 +30,8 @@ class Atom:
         self.compute_value()
 
     def __str__(self):
-        return self.string[-1] + ' ' + ('T' if self.assignment == True else 'F')
+        atom_str = self.string if self.string[0] != '-' else self.string[1:]
+        return atom_str + ' ' + ('T' if self.assignment == True else 'F')
 
     def __eq__(self, other):
         """
@@ -40,4 +41,10 @@ class Atom:
         if type(self) != type(other):
             return False
         else:
-            return self.string[-1] == other.string[-1]
+            lhs = self.string
+            rhs = other.string
+            if self.string[0] == '-':
+                lhs = self.string[1:]
+            if other.string[0] == '-':
+                rhs = other.string[1:]
+            return lhs == rhs
