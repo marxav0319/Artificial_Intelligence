@@ -11,9 +11,11 @@
 	\begin{enumerate}
 		
 		%% Problem 1
-		\item Constraint 1: Any set $W_i \in W$ where $W_i$ is also in $Y$, the union of all such $W_i$ should include any atom of $U$ exactly once.  In other words, $\forall a \in U,$ if $a \in Y$ then it is only in $Y$ once.
+		\item Constraint 1: Any set $W_i \in W$ where $W_i$ is also in $Y$, the union of all such $W_i$ should include any atom of $U$ exactly once.  In other words, $\forall a \in U,$ if $a \in Y$ then it is only in $Y$ once. In the example given, we cannot have $Y=\{a,d,f,h\}, \{b,d,f,h\}$ as $f$ and $h$ are in $Y$ twice.
 		
-		Constraint 2: For the problem to actually be satisfiable, the union of all sets $W_i \in W$ must include every $a \in U$ \textbf{at least once}.  If this constraint is not met, the problem is unsatisfiable as no collection of $W_i$ will include every atom in $S$.
+		Constraint 2: For the problem to actually be satisfiable, the union of all sets $W_i \in W$ must include every $a \in U$ \textbf{at least once}.  If this constraint is not met, the problem is unsatisfiable as no collection of $W_i$ will include every atom in $S$.  If, in the example given, $W$ did not include a single $W_i$ that included $a$, the problem would be unsolvable.
+		
+		Constraint 3: $\forall_{W_i} \in W, j \in W_i \Leftrightarrow j \in U$ - this is given via the problem prompt but is an additional constraint. 
 		
 		%% Problem 2
 		\item Problem 2:
