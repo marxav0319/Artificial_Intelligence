@@ -62,12 +62,17 @@ def dp1(atoms, sentences):
             if new_atoms != None:
                 return new_atoms
 
-def write_assignments(atoms):
+def write_assignments(atoms, rest_of_input):
     """
     """
     f = open(OUTFILE, 'w')
-    for atom in atoms:
-        f.write(str(atom) + '\n')
+    if atoms != None:
+        for atom in atoms:
+            f.write(str(atom) + '\n')
+
+    f.write('0\n')
+    for translation in rest_of_input:
+        f.write(translation)
     f.close()
 
 def davis_putnam():
@@ -78,14 +83,7 @@ def davis_putnam():
     pure_literals = sentences.get_pure_literals()
 
     atoms_assigned = dp1(atoms, sentences)
-    if atoms_assigned == None:
-        print 'No Solution'
-    else:
-        for atom in atoms_assigned:
-            print atom
-
-    # Write 0 if no solution and the backtrack info
-    write_assignments(atoms_assigned)
+    write_assignments(atoms_assigned, sentences.rest_of_input)
 
     return
 

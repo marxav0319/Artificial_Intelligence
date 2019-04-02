@@ -6,8 +6,9 @@ class Sentences:
     """
     """
 
-    def __init__(self, clauses):
+    def __init__(self, clauses, rest_of_input):
         self.clauses = clauses
+        self.rest_of_input = rest_of_input
         self.compute_value()
 
     def update(self, clauses):
@@ -40,8 +41,10 @@ class Sentences:
                     clause.append(Atom(l))
             clauses.append(Clause(clause))
 
-        # Read in the rest of the file and store so that it can be re-written
-        return cls(clauses)
+        rest_of_input = []
+        for line in f:
+            rest_of_input.append(line)
+        return cls(clauses, rest_of_input)
 
     def get_unique_atoms(self):
         """
