@@ -17,6 +17,8 @@
 		
 		Constraint 3: $\forall_{W_i} \in W, j \in W_i \Leftrightarrow j \in U$ - this is given via the problem prompt but is an additional constraint. 
 		
+		Constraint 4: This follows from constraint one, however $Y$ may not include any $W_i \in W$ more than once, so $Y$ cannot include $\{a,d,f,h\}$ twice.
+		
 		%% Problem 2
 		\item Problem 2:
 			
@@ -56,9 +58,28 @@
 		c1. ${\tt \neg Living(p,t) \vee Earlier(Birth(p), t)}$\\
 		c2. ${\tt \neg Living(p,t) \vee Earlier(t, Death(p))}$\\
 		c3. ${\tt \neg Earlier(Birth(p),t) \vee \neg Earlier(t, Death(p)) \vee Living(p,t)}$\\
-		d.\phantom{1} ${\tt \neg Earlier(ta, tb) \vee \neg Earlier(tb, ta)}$
+		d.\phantom{1} ${\tt \neg Earlier(ta, tb) \vee \neg Earlier(tb, ta)}$\\
+		S: {\tt Living(Ted, Born(Anne))} - \textbf{this is our negated assumption to prove.}
 		
-		Now assume {\tt Living(Ted, Born(Anne))}.  Given (a), we know {\tt Earlier(Birth(Anne), Birth(Ted))}.  Then we know from (c1) that for {\tt Living(Ted, Born(Anne)) we need Earlier(Birth(Ted), Birth(Anne))}.\\  This leads to {\tt Earlier(Birth(Anne), Birth(Ted))} from (a), but also {\tt Earlier(Birth(Ted), Birth(Anne))} from (c1), and per (d), we have a contradiction.  Therefore we prove by contradiction that {\tt $\neg$ Living(Ted, Born(Anne))}.
+		The resolutions done follow below:
+		
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			ID & Clauses & Substitution & Resolution\\
+			\hline
+			r1 & a, b & $\{x \rightarrow Anne, y \rightarrow Ted\}$ & {\tt E(B(Anne), B(Ted))}\\
+			\hline
+			r2 & r1, d & $\{ta \rightarrow B(Anne), tb \rightarrow B(Ted)\}$ & ${\tt \neg E(B(Ted), B(Anne))}$\\
+			\hline
+			r3 & r2, c1 & $\{p \rightarrow Ted, t \rightarrow B(Anne)\}$ & ${\tt \neg L(Ted, B(Anne))}$\\
+			\hline
+			sol & r3, S & N/A & negation \\
+			\hline
+		\end{tabular}
+		
+		And we prove by contradiction that $S$ cannot be true.
+		
+		\pagebreak
 		
 		%% Problem 4
 		\item After conversion to CNF, we are left with the following clauses:
@@ -67,9 +88,28 @@
 		c2. ${\tt \neg Living(p,t) \vee Earlier(t, Death(p))}$\\
 		c3. ${\tt \neg Earlier(Birth(p),t) \vee \neg Earlier(t, Death(p)) \vee Living(p,t)}$\\
 		e.\phantom{1} ${\tt \neg Earlier(ta, tb) \vee \neg Earlier(tb, tc) \vee Earlier(ta, tc)}$\\
-		f.\phantom{1} ${\tt Living(p, \lambda(p))}$
+		f.\phantom{1} ${\tt Living(p, \lambda(p))}$\\
+		S. ${\tt \neg Earlier(Born(p), Death(p))}$ - \textbf{this is our negated assumption to prove.}
 		
-		Now assume ${\tt \neg Earlier(Born(p), Death(p))}$.  Then from (f), we have that $p$ is living at time $\lambda(p)$.  From (c1), we have {\tt Earlier(Birth(p), $\lambda(p)$)} and (c2) gives {\tt Earlier($\lambda(p)$, Death(p))}.  However, at (e), we get that {\tt Earlier(Birth(p), $\lambda(p)$) $\wedge$ Earlier($\lambda(p)$, Death(p))} leads to {\tt Earlier(Birth(p), Death(p))}.  However, this is in direct contradiction to our starting assumption, meaning our assumption was wrong and (h) is proven.
+		Again, the resolutions follow:
+		
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			ID & Clauses & Substitution & Resolution\\
+			\hline
+			r1 & c1, f & $\lambda(p) \rightarrow t$ & ${\tt E(B(p),t)}$\\
+			\hline
+			r2 & c2, f & $\lambda(p) \rightarrow t$ & ${\tt E(t,D(p))}$\\
+			\hline
+			r3 & r1, e & ${\tt ta \rightarrow B(p), tb \rightarrow t}$ & ${\tt \neg E(t, tc) \vee E(B(p),tc)}$\\
+			\hline
+			r4 & r2, r3 & ${\tt tc \rightarrow D(p)}$ & ${\tt E(B(p), D(P))}$\\
+			\hline
+			sol & r4, S & N/A & negation\\
+			\hline
+		\end{tabular}
+	
+		Hence we prove by contradiction that $S$ is not true.
 		 
 	\end{enumerate}
 \end{document}
