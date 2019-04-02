@@ -1,4 +1,6 @@
 import copy
+import sys
+import os
 from registers import Value, Assign
 
 OUTFILE = r'temp_outputs/clauses.txt'
@@ -188,15 +190,31 @@ def write_actual_clauses_to_file(clauses, all_atoms):
         f.write("\n")
     f.close()
 
-def main():
+def print_usage():
     """
     """
-    start_state, end_state, time = read_input('test_inputs/fe_input_1')
+    print "[*] ERROR: This script expected exactly 1 input: the filepath to the input file."
+    print "Please ensure the input file exists (as a text file) and run again."
+    print
+    print "USAGE:"
+    print "> python front_end.py <filepath>"
+    print "Exiting"
+    sys.exit(1)
+
+def front_end(input_file=None):
+    """
+    """
+    if input_file == None:
+        if len(sys.argv) < 2 or len(sys.argv) > 2:
+            print_usage()
+        else:
+            input_file = sys.argv[1]
+
+    start_state, end_state, time = read_input(input_file)
     all_value_atoms = generate_value_atoms(start_state, time)
     all_assignment_atoms = generate_assignment_atoms(start_state, time, all_value_atoms[-1].id)
     clauses = generate_clauses(start_state, end_state, time, all_value_atoms, all_assignment_atoms)
     write_clauses_to_file(clauses, all_value_atoms + all_assignment_atoms)
-    write_actual_clauses_to_file(clauses, all_value_atoms + all_assignment_atoms)
 
 if __name__ == '__main__':
-    main()
+    front_end()

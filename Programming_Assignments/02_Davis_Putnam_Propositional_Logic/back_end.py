@@ -30,7 +30,7 @@ def print_translations(translations):
         print "R%s = R%s at Time: %s" % (t[2], t[3], t[4])
     return
 
-def main():
+def back_end():
     """
     """
     translations = read_input_file()
@@ -42,4 +42,4 @@ def main():
     return
 
 if __name__ == '__main__':
-    main()
+    back_end()
