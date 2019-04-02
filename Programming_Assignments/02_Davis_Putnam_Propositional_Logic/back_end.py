@@ -1,4 +1,4 @@
-INFILE = r'temp_outputs/davis_putnam_output.txt'
+INFILE = r'temp_outputs/davis_putnam_output'
 ASSIGN_ATOM = 'A'
 VALUE_ATOM = 'V'
 

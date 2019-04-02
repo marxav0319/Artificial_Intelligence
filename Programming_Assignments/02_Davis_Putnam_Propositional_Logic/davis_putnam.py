@@ -7,8 +7,8 @@ import copy
 
 from logic import Sentences
 
-INFILE = r'temp_outputs/clauses.txt'
-OUTFILE = r'temp_outputs/davis_putnam_output.txt'
+INFILE = r'temp_outputs/clauses'
+OUTFILE = r'temp_outputs/davis_putnam_output'
 
 def dp1(atoms, sentences):
     """
@@ -59,8 +59,7 @@ def dp1(atoms, sentences):
             sentences_copy = copy.deepcopy(sentences)
             sentences_copy.propogate(edit_atoms[i], False)
             new_atoms = dp1(edit_atoms, sentences_copy)
-            if new_atoms != None:
-                return new_atoms
+            return new_atoms
 
 def write_assignments(atoms, rest_of_input):
     """
@@ -80,7 +79,7 @@ def davis_putnam():
     """
     sentences = Sentences.read_from_file(INFILE)
     atoms = sentences.get_unique_atoms()
-    pure_literals = sentences.get_pure_literals()
+    # pure_literals = sentences.get_pure_literals()
 
     atoms_assigned = dp1(atoms, sentences)
     write_assignments(atoms_assigned, sentences.rest_of_input)

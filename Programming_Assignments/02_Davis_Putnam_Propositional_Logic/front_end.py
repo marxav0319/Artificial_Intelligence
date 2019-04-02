@@ -3,14 +3,14 @@ import sys
 import os
 from registers import Value, Assign
 
-OUTFILE = r'temp_outputs/clauses.txt'
-OUTFILE_T = r'temp_outputs/clauses_real.txt'
+OUTFILE = r'temp_outputs/clauses'
+OUTFILE_T = r'temp_outputs/clauses_real'
 
 def split_names_and_values(start):
     """
     """
     names = [int(start[i]) for i in xrange(0, len(start), 2)]
-    values = [start[i] for i in xrange(1, len(start), 2)]
+    values = list({start[i] for i in xrange(1, len(start), 2)})
     return names, values
 
 def generate_value_atoms(start, time):
@@ -60,9 +60,9 @@ def generate_value_clauses(start, all_value_atoms, time=0):
     """
     """
     clause = ''
-    verbose_clause = ''
     for i in xrange(0, len(start), 2):
-        atom = all_value_atoms[all_value_atoms.index(Value(int(start[i]), start[i+1], time, 0))]
+        atom_mask = Value(int(start[i]), start[i+1], time, 0)
+        atom = all_value_atoms[all_value_atoms.index(atom_mask)]
         clause += str(atom.id) + '\n'
     return clause
 
@@ -72,7 +72,6 @@ def generate_axiom_1_clauses(names, values, all_value_atoms, time):
     Unique value axiom
     """
     clause = ''
-    verbose_clause = ''
     for t in xrange(0, time+1):
         for name in names:
             for i in xrange(len(values)):

@@ -54,6 +54,7 @@ class Sentences:
             for atom in clause.atoms:
                 if atom not in atoms:
                     atoms.append(atom)
+
         return atoms
 
     def _literal_counter(self, literals, atom):

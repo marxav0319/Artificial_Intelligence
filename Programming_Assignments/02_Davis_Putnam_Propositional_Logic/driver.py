@@ -22,7 +22,9 @@ def main():
         print_usage()
 
     fe.front_end(sys.argv[1])
+    print 'Exiting Front End, Entering DP'
     dp.davis_putnam()
+    print 'Exiting DP, entering Back End'
     be.back_end()
 
     return
