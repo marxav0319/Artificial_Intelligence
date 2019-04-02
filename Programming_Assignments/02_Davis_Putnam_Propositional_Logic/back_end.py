@@ -1,9 +1,20 @@
+"""
+back_end.py
+
+Holds the implementation of the back-end as described in programming assignment 2.  This script
+converts the output of the davis_putnam algorithm to human-readable steps for assigning registers.
+
+Author: Mark Xavier
+"""
+
+# Contants
 INFILE = r'temp_outputs/davis_putnam_output'
 ASSIGN_ATOM = 'A'
 VALUE_ATOM = 'V'
 
 def read_input_file():
     """
+    Reads the output of davis_putnam.
     """
     true_atoms = []
     translations = []
@@ -24,6 +35,14 @@ def read_input_file():
 
 def print_translations(translations):
     """
+    Prints the back-translated solution given by davis-putnam to the screen.
+
+    Args:
+        translations list<str>: the true valued atoms computed from davis-putnam in the coded
+                                form written by the front_end.
+
+    Returns:
+        None
     """
     print '\nAssignments:'
     for t in translations:
@@ -32,7 +51,10 @@ def print_translations(translations):
 
 def back_end():
     """
+    The main driver for the back-end.
     """
+
+    # Simply read the input file, if we have no valuation, print no solution, else print valuation.
     translations = read_input_file()
     if len(translations) == 0:
         print '\nNo Solution'

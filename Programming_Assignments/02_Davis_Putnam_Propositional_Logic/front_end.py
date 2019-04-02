@@ -1,13 +1,33 @@
+"""
+front_end.py
+
+Holds the implementation of the front-end as described in programming assignment 2.  This script
+takes in the input file and converts it into a series of clauses to be input into davis-putnam,
+along with some data so that back-conversion can take place.
+
+Author: Mark Xavier
+"""
+
 import copy
 import sys
 import os
 from registers import Value, Assign
 
+# Constants
 OUTFILE = r'temp_outputs/clauses'
 OUTFILE_T = r'temp_outputs/clauses_real'
 
 def split_names_and_values(start):
     """
+    Given the starting registers, gives the names of the registers in a list, and the possible
+    values at any given register in a separate list.
+
+    Args:
+        start <str>: the string denoting the starting state
+
+    Returns:
+        list<int>: the list of register names
+        list<str>: the list of possible values
     """
     names = [int(start[i]) for i in xrange(0, len(start), 2)]
     values = list({start[i] for i in xrange(1, len(start), 2)})
@@ -15,6 +35,14 @@ def split_names_and_values(start):
 
 def generate_value_atoms(start, time):
     """
+    Generates all possible Value atoms possible.
+
+    Args:
+        start <str>: the starting state passed as a string
+        time <int>: the time for completion
+
+    Returns:
+        list<value.Value>: all possible Value instances given the registers, values, and time limit.
     """
     regs, values = split_names_and_values(start)
     id = 1
@@ -29,6 +57,16 @@ def generate_value_atoms(start, time):
 
 def generate_assignment_atoms(start, time, last_id):
     """
+    Generates all possible assignment atoms.
+
+    Args:
+        start <str>: the starting state passed as a string
+        time <int>: the time for completion
+        last_id <int>: since this is run after getting all value atoms, we initialize id's for
+                       assignment to be 1 + len(Value_Atoms) so that every atom has a unique id.
+
+    Returns:
+        list<assign.Assign>: all possible assignment atoms
     """
     regs = split_names_and_values(start)[0]
     id = last_id + 1
@@ -46,6 +84,16 @@ def generate_assignment_atoms(start, time, last_id):
 
 def read_input(filepath):
     """
+    Reads the input file and gets a list of the atoms/values in the start and end states as well as
+    the time.
+
+    Args:
+        filepath <str>: the filepath for the input file
+
+    Returns:
+        list <str>: the starting state with registers/values in a list
+        list <str>: the end state similar to the start state above
+        time <int>: the time limit for the register switches from the input file
     """
     f = open(filepath)
     start_state = f.readline().strip().split(" ")
@@ -58,6 +106,15 @@ def read_input(filepath):
 
 def generate_value_clauses(start, all_value_atoms, time=0):
     """
+    Generates the single line clauses for both the start and end states for davis_putnam.
+
+    Args:
+        start <str>: the start state from the input file
+        all_value_atoms list<value.Value>: the list of all possible value atoms
+        time <int>: the time at which the value at the register occurs
+
+    Returns:
+        <str>: a single line for each register in the "start" argument
     """
     clause = ''
     for i in xrange(0, len(start), 2):
@@ -69,7 +126,16 @@ def generate_value_clauses(start, all_value_atoms, time=0):
 
 def generate_axiom_1_clauses(names, values, all_value_atoms, time):
     """
-    Unique value axiom
+    Unique value axiom - generates clauses for the unique value axiom from the assignment.
+
+    Args:
+        names list<int>: all possible register names
+        values list<str>: all possible register values
+        all_value_atoms list<value.Value>: the list of all possible value atoms
+        time <int>: the time limit
+
+    Returns:
+        <str>: all unique value axiom clauses
     """
     clause = ''
     for t in xrange(0, time+1):
@@ -88,7 +154,17 @@ def generate_axiom_1_clauses(names, values, all_value_atoms, time):
 
 def generate_axiom_2_clauses(names, values, value_atoms, assign_atoms, time):
     """
-    Positive effects of actions axiom
+    Generates all positive effects of actions axiom per the assignment.
+
+    Args:
+    names list<int>: all possible register names
+    values list<str>: all possible register values
+    all_value_atoms list<value.Value>: the list of all possible value atoms
+    assign_atoms list<assign.Assign>: all possible assignment atoms
+    time <int>: the time limit
+
+    Returns:
+        <str>: all positive effects of actions axiom clauses
     """
     clause = ''
     for atom in assign_atoms:
@@ -110,7 +186,17 @@ def generate_axiom_2_clauses(names, values, value_atoms, assign_atoms, time):
 
 def generate_axiom_3_clauses(names, values, value_atoms, assign_atoms, time):
     """
-    Frame axiom
+    Generates all frame axiom clauses per the assignment.
+
+    Args:
+    names list<int>: all possible register names
+    values list<str>: all possible register values
+    all_value_atoms list<value.Value>: the list of all possible value atoms
+    assign_atoms list<assign.Assign>: all possible assignment atoms
+    time <int>: the time limit
+
+    Returns:
+        <str>: all frame actions axiom clauses
     """
     clause = ''
     for name in names:
@@ -129,7 +215,17 @@ def generate_axiom_3_clauses(names, values, value_atoms, assign_atoms, time):
 
 def generate_axiom_4_clauses(names, values, value_atoms, assign_atoms, time):
     """
-    Incompatible assignment axiom
+    Generates all incompatible assignment axioms per the assignment
+
+    Args:
+    names list<int>: all possible register names
+    values list<str>: all possible register values
+    all_value_atoms list<value.Value>: the list of all possible value atoms
+    assign_atoms list<assign.Assign>: all possible assignment atoms
+    time <int>: the time limit
+
+    Returns:
+        <str>: all incomplete assignment axiom clauses
     """
     clause = ''
     for atom in assign_atoms:
@@ -145,6 +241,17 @@ def generate_axiom_4_clauses(names, values, value_atoms, assign_atoms, time):
 
 def generate_clauses(start, end, time, all_value_atoms, all_assignment_atoms):
     """
+    Generates all clauses as specified in the assignment (axioms 1-6).
+
+    Args:
+    start <str>: the starting state from the input file
+    end <str>: the ending state from the input file
+    time <int>: the time limit
+    all_value_atoms list<value.Value>: the list of all possible value atoms
+    all_assignment_atoms list<assign.Assign>: all possible assignment atoms
+
+    Returns:
+        <str>: all incomplete assignment axiom clauses
     """
     names, values = split_names_and_values(start)
     clauses = ''
@@ -160,6 +267,14 @@ def generate_clauses(start, end, time, all_value_atoms, all_assignment_atoms):
 
 def write_clauses_to_file(clauses, all_atoms):
     """
+    Writes the clauses to file for input into the davis_putnam algorithm.
+
+    Args:
+        clauses <str>: the clauses to write
+        all_atoms list<value.Value, assign.Assign>: all possible atoms
+
+    Returns:
+        None
     """
     f = open(OUTFILE, 'w')
     f.write(clauses)
@@ -172,6 +287,7 @@ def write_clauses_to_file(clauses, all_atoms):
 
 def write_actual_clauses_to_file(clauses, all_atoms):
     """
+    A utility function for debugging, no longer needed.
     """
     f = open(OUTFILE_T, 'w')
     line_list = clauses.splitlines()
@@ -190,8 +306,7 @@ def write_actual_clauses_to_file(clauses, all_atoms):
     f.close()
 
 def print_usage():
-    """
-    """
+    """ Prints usage, self explanatory. """
     print "[*] ERROR: This script expected exactly 1 input: the filepath to the input file."
     print "Please ensure the input file exists (as a text file) and run again."
     print
@@ -202,16 +317,22 @@ def print_usage():
 
 def front_end(input_file=None):
     """
+    The main driver for the front-end.
     """
+
+    # File checking
     if input_file == None:
         if len(sys.argv) < 2 or len(sys.argv) > 2:
             print_usage()
         else:
             input_file = sys.argv[1]
 
+    # Read input and generate all possible atoms
     start_state, end_state, time = read_input(input_file)
     all_value_atoms = generate_value_atoms(start_state, time)
     all_assignment_atoms = generate_assignment_atoms(start_state, time, all_value_atoms[-1].id)
+
+    # Generate clauses and write to file
     clauses = generate_clauses(start_state, end_state, time, all_value_atoms, all_assignment_atoms)
     write_clauses_to_file(clauses, all_value_atoms + all_assignment_atoms)
 

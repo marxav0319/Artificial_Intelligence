@@ -1,4 +1,6 @@
 """
+davis_putnam.py
+
 Holds the implementation of the Davis-Putnam algorithm defined in class.
 
 Author: Mark Xavier
@@ -12,6 +14,14 @@ OUTFILE = r'temp_outputs/davis_putnam_output'
 
 def dp1(atoms, sentences):
     """
+    The davis-putnam helper algorithm as described by the professor and online.
+
+    Args:
+        atoms list<atom.Atom>: the list of unique atoms in the sentences
+        sentences <sentence.Sentences>: the set of clauses
+
+    Returns:
+        list<atom.Atom> or None depending on whether a satisfying valuation is found.
     """
     while(True):
         # The base case where we've satisfied all sentences
@@ -63,6 +73,12 @@ def dp1(atoms, sentences):
 
 def write_assignments(atoms, rest_of_input):
     """
+    Write the assignments given to the atoms to file for translation from the back-end.
+
+    Args:
+        atoms list<atom.Atom> or None: the atoms with their assignments or None if no assignment
+                                       could be found.
+        rest_of_input list<str>: the rest of the input from the front-end to help with back translation.
     """
     f = open(OUTFILE, 'w')
     if atoms != None:
@@ -76,11 +92,13 @@ def write_assignments(atoms, rest_of_input):
 
 def davis_putnam():
     """
+    The main driver program that calls the davis_putnam helper program.
     """
+    # Create our sentences and compute the unique atoms
     sentences = Sentences.read_from_file(INFILE)
     atoms = sentences.get_unique_atoms()
-    # pure_literals = sentences.get_pure_literals()
 
+    # Run the algorithm and write the solution
     atoms_assigned = dp1(atoms, sentences)
     write_assignments(atoms_assigned, sentences.rest_of_input)
 
