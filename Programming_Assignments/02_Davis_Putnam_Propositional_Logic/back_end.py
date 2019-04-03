@@ -44,9 +44,16 @@ def print_translations(translations):
     Returns:
         None
     """
-    print '\nAssignments:'
+    print '\nSolution:'
+    time = 0
+    result = 'Cycle 1: '
     for t in translations:
-        print "R%s = R%s at Time: %s" % (t[2], t[3], t[4])
+        if time != int(t[4]):
+            time = int(t[4])
+            result += '\nCycle %d: ' % (time + 1) 
+        result += 'R%s = R%s; ' % (t[2], t[3])
+    print result
+    print
     return
 
 def back_end():
@@ -57,7 +64,7 @@ def back_end():
     # Simply read the input file, if we have no valuation, print no solution, else print valuation.
     translations = read_input_file()
     if len(translations) == 0:
-        print '\nNo Solution'
+        print '\nNo Solution\n'
     else:
         print_translations(translations)
 
