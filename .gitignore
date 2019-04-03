@@ -5,3 +5,6 @@
 
 # Python
 *.pyc
+
+# Repo Specific
+test_inputs
