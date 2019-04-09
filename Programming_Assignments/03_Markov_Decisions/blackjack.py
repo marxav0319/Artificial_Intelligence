@@ -12,17 +12,18 @@ class Blackjack:
         self.u_target = u_target
         self.cards = range(1, n_cards + 1)
         self.play = [[0 for i in xrange(l_target)] for j in xrange(l_target)]
-        self.prob = [[0 for i in xrange(l_target)] for j in xrange(l_target)]
+        self.prob = [[0.0 for i in xrange(l_target)] for j in xrange(l_target)]
 
-        self.fill_moves()
+        self.compute_play_and_prob_arrays()
+        print self
 
-    def compute_probability(self, p1_score, p2_score):
+    def compute_prob_win_if_p1_draws(self, p1_score, p2_score):
         """
         """
 
         prob_p1_wins = 0.0
-        prob_p2_wins = 0.0
         for card in self.cards:
+            prob_p2_wins = 0.0
             if p1_score + card > self.u_target:
                 prob_p2_wins = 1.0
             elif p1_score + card >= self.l_target:
@@ -33,27 +34,35 @@ class Blackjack:
 
         return prob_p1_wins
 
+    def compute_prob_win_if_p1_stays(self, p1_score, p2_score):
+        """
+        """
+
+        if p2_score > p1_score:
+            return 0
+        return 1 - self.prob[p2_score][p1_score]
+
     def compute_move(self, p1_score, p2_score):
-    """
-    """
+        """
+        """
 
-    if p1_score < p2_score:
-        self.play[p1_score][p2_score] = True
-        self.prob[p1_score][p2_score] = self.compute_probability()
-    else:
-        p1_wins_drawing = self.compute_probability()
-        p2_wins_staying = 1 - p1_wins_prob
-
-        if p1_wins_drawing > p1_wins_staying:
+        if p1_score < p2_score:
             self.play[p1_score][p2_score] = True
-            self.prob[p1_score][p2_score] = p1_wins_drawing
+            self.prob[p1_score][p2_score] = self.compute_prob_win_if_p1_draws(p1_score, p2_score)
         else:
-            self.play[p1_score][p2_score] = False
-            self.prob[p1_score][p2_score] = p1_wins_staying
+            p1_wins_drawing = self.compute_prob_win_if_p1_draws(p1_score, p2_score)
+            p1_wins_staying = self.compute_prob_win_if_p1_stays(p1_score, p2_score)
 
-    return
+            if p1_wins_drawing > p1_wins_staying:
+                self.play[p1_score][p2_score] = True
+                self.prob[p1_score][p2_score] = p1_wins_drawing
+            else:
+                self.play[p1_score][p2_score] = False
+                self.prob[p1_score][p2_score] = p1_wins_staying
 
-    def fill_moves(self):
+        return
+
+    def compute_play_and_prob_arrays(self):
         """
         """
 
@@ -65,22 +74,27 @@ class Blackjack:
                 p1_score = start_col + j
                 p2_score = min(self.l_target, i) - j - 1
                 self.compute_move(p1_score, p2_score)
-                # outstr += '(%d, %d) ' % (p1_score, p2_score)
-            print outstr + '\n'
 
     def __str__(self):
         """
         """
 
-        return ''
+        outstr = ''
+        for row in self.play:
+            outstr += ' '.join([str(bl) for bl in row])
+            outstr += '\n'
+        outstr += '\n'
+        for row in self.prob:
+            outstr += ' '.join('%.2f' % (p) for p in row)
+            outstr += '\n'
+
+        return outstr
 
 def main():
     """
     """
 
     blackjack = Blackjack(10, 21, 25)
-    # for row in blackjack.play:
-    #     print row
 
 
 if __name__ == '__main__':
