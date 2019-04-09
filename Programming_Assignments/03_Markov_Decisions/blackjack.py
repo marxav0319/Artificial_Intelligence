@@ -135,9 +135,10 @@ class Blackjack:
         A utility function for easier printing.
         """
 
+        translator = {True:'D', False:'P'}
         outstr = 'Play Array\n'
         for row in self.play:
-            outstr += ' '.join([str(bl)[0] for bl in row])
+            outstr += ' '.join([translator[bl] for bl in row])
             outstr += '\n'
         outstr += '\nProb Array\n'
         for row in self.prob:
