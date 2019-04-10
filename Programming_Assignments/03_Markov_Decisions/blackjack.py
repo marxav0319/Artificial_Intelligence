@@ -32,8 +32,10 @@ class Blackjack:
         self.l_target = l_target
         self.u_target = u_target
         self.cards = range(1, n_cards + 1)
-        self.play = [[0 for i in xrange(l_target)] for j in xrange(l_target)]
-        self.prob = [[0.0 for i in xrange(l_target)] for j in xrange(l_target)]
+        self.play = [[None for i in xrange(l_target)] for j in xrange(l_target)]
+        self.prob = [[None for i in xrange(l_target)] for j in xrange(l_target)]
+        self.prob_x_wins_draw = [[None for i in xrange(l_target)] for j in xrange(l_target)]
+        self.prob_x_wins_stay = [[None for i in xrange(l_target)] for j in xrange(l_target)]
 
         self.compute_play_and_prob_arrays()
         print self
@@ -78,7 +80,7 @@ class Blackjack:
 
         if p2_score > p1_score:
             return 0
-        return 1 - self.prob[p2_score][p1_score]
+        return 1 - self.prob_x_wins_draw[p2_score][p1_score]
 
     def compute_move(self, p1_score, p2_score):
         """
@@ -95,10 +97,14 @@ class Blackjack:
 
         if p1_score < p2_score:
             self.play[p1_score][p2_score] = True
-            self.prob[p1_score][p2_score] = self.compute_prob_win_if_p1_draws(p1_score, p2_score)
+            prob_x_wins_draw = self.compute_prob_win_if_p1_draws(p1_score, p2_score)
+            self.prob[p1_score][p2_score] = prob_x_wins_draw
+            self.prob_x_wins_draw[p1_score][p2_score] = prob_x_wins_draw
         else:
             p1_wins_drawing = self.compute_prob_win_if_p1_draws(p1_score, p2_score)
+            self.prob_x_wins_draw[p1_score][p2_score] = p1_wins_drawing
             p1_wins_staying = self.compute_prob_win_if_p1_stays(p1_score, p2_score)
+            self.prob_x_wins_stay[p1_score][p2_score] = p1_wins_staying
 
             if p1_wins_drawing > p1_wins_staying:
                 self.play[p1_score][p2_score] = True
@@ -142,7 +148,7 @@ class Blackjack:
             outstr += '\n'
         outstr += '\nProb Array\n'
         for row in self.prob:
-            outstr += ' '.join('%.2f' % (p) for p in row)
+            outstr += ' '.join('%.4f' % (p) for p in row)
             outstr += '\n'
 
         return outstr
