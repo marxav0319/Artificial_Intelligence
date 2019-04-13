@@ -95,18 +95,21 @@ class Blackjack:
                    probability.
         """
 
+        # If p1 score < p2 score, p1 draws
         if p1_score < p2_score:
             self.play[p1_score][p2_score] = True
             prob_x_wins_draw = self.compute_prob_win_if_p1_draws(p1_score, p2_score)
             self.prob[p1_score][p2_score] = prob_x_wins_draw
             self.prob_x_wins_draw[p1_score][p2_score] = prob_x_wins_draw
+
+        # else calculate prob p1 wins drawing and staying, then choose the better (draw if equal)
         else:
             p1_wins_drawing = self.compute_prob_win_if_p1_draws(p1_score, p2_score)
             self.prob_x_wins_draw[p1_score][p2_score] = p1_wins_drawing
             p1_wins_staying = self.compute_prob_win_if_p1_stays(p1_score, p2_score)
             self.prob_x_wins_stay[p1_score][p2_score] = p1_wins_staying
 
-            if p1_wins_drawing > p1_wins_staying:
+            if p1_wins_drawing >= p1_wins_staying:
                 self.play[p1_score][p2_score] = True
                 self.prob[p1_score][p2_score] = p1_wins_drawing
             else:
