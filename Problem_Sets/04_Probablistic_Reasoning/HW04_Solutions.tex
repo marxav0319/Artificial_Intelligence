@@ -14,9 +14,14 @@
 				\item This is the probability of choosing a coin in category 1 and getting heads plus choosing a coin in category 2 and getting heads plus choosing a coin in category 3 and getting heads, which translates to:
 				$$P(F=H) = \bigg(\frac{1}{5} * 0.2\bigg) + \bigg(\frac{2}{5} * 0.3\bigg) + \bigg(\frac{2}{5} * 0.9\bigg) = 0.52$$
 				
-				\item \textbf{come back}
+				\item Then we get:\\
+				$E(C=x) = \#flips * p(heads)$\\
+				$E(C=1) = 0.2 * 10 = 2$\\
+				$E(C=2) = 0.3 * 10 = 3$\\
+				$E(C=3) = 0.9 * 10 = 9$\\
+				$E(Choose=3, Flip=10) = \sum_{i=1}^{3}P(C=i)*E(C=i) = \frac{1}{5} * 2 + \frac{2}{5} * 3 + \frac{2}{5} * 9 = 5.2$\\
 				
-				\item \textbf{come back} Assuming $C$ is the category and $F$ represents the flip (Either $H$ or $T$) then we are asked to find $P(C=1 | F=H), P(C=2 | F=H), P(C=3 | F=H)$.  The overall formula for any category $c$ is:
+				\item Assuming $C$ is the category and $F$ represents the flip (Either $H$ or $T$) then we are asked to find $P(C=1 | F=H), P(C=2 | F=H), P(C=3 | F=H)$.  The overall formula for any category $c$ is:
 				$$P(C=c | F=H) = \frac{P(F=H | C=c) * P(C=c)}{P(F=H)}$$
 				
 				The denominator is calculated in (a), $P(C=c)$ is simply the number of coins in category $c$ divided by 5, and $P(F=H | C=c)$ is given in the problem prompt, so we have:
@@ -24,12 +29,21 @@
 				$P(C=1 | F=H) = \frac{\frac{1}{5} * 0.2}{0.52} = 0.077$\\
 				$P(C=2 | F=H) = \frac{\frac{2}{5} * 0.3}{0.52} = 0.230$\\
 				$P(C=3 | F=H) = \frac{\frac{2}{5} * 0.9}{0.52} = 0.692$\\
+				$P(F2=H | F1=H) = \sum_{i=1}^{3} P(C=i)*P(F=H | C=i)^2 = 0.36$\\
 				
-				\item \textbf{come back}
+				\item $$P(C=x | F1 = H, F2=H) = \frac{P(F1=H, F2=H | C=x) * P(C=x)}{P(F1=H, F2=H)}$$
+				
+				We've already calculated the denominator in the previous question, so we just have to worry about the numerators.
+				
+				$$\sum_{i=1}^{3}P(C=i | F_1=H, F_2=H) = 0.395$$\\
 				
 				\item The probability of getting heads is part (a) of this assignment, which is $0.52$.  This means it's a little over a 50/50 chance that you will get heads.  If you bet heads, the expected payout is $E(X) = (0.52 * 10) + (0.48 * -10) = 0.4$.  This means on average over a large number of plays, we expect a payout of $\$0.40$, so you should bet Heads and expect to win $40$ cents over the long term.
 				
-				\item \textbf{come back}
+				\item The proper bet is clearly to bet on the outcome of the first flip.  Since none of the coins are fair, they all tend to lean toward either Heads or Tails, meaning that your first flip is more likely land on the side with the higher probability.  You can of course change your strategy if it turns out you get more of one side than the other, the first flip may be a fluke, resulting in the side with the lower probability.  Now we change our base probability, so we calculate $P(Win) = P(C=i) * max(P(F=H | C=i), P(F=T|C=i))$ and we use $P(Win)$ in our previous formula.  So, given the definition above, $P(Win) = 0.8$ and our expected value is 6.
 			\end{enumerate}
+		
+		\item Problem 2
+		
+		\item Problem 3
 	\end{enumerate}
 \end{document}
