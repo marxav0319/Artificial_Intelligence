@@ -42,8 +42,14 @@
 				\item The proper bet is clearly to bet on the outcome of the first flip.  Since none of the coins are fair, they all tend to lean toward either Heads or Tails, meaning that your first flip is more likely land on the side with the higher probability.  You can of course change your strategy if it turns out you get more of one side than the other, the first flip may be a fluke, resulting in the side with the lower probability.  Now we change our base probability, so we calculate $P(Win) = P(C=i) * max(P(F=H | C=i), P(F=T|C=i))$ and we use $P(Win)$ in our previous formula.  So, given the definition above, $P(Win) = 0.8$ and our expected value is 6.
 			\end{enumerate}
 		
-		\item Problem 2
-		
+		\item Problem 2, expected values are:
+			\begin{itemize}
+				\item 1 Reviewer: In this case, we have an expected value of 420, since the reviewer chooses to publish with a probability of 0.46, which is $P(R=Y|S=T)P(S=T) + P(R=Y|S=F)P(S=F)$ where $S$ is whether it is True or False that the publishing is successful, and $R$ is the reviewer response (Yes or No to publishing). Success leads to a payoff of 49,500, failure leads to a payout of -500, and each of these occur with probability 0.46 and 0.54 respectively, leading to 420.
+				
+				\item Expected value here is -306.8.
+				
+				\item Expected value is -80.
+			\end{itemize}
 		\item Problem 3
 	\end{enumerate}
 \end{document}
