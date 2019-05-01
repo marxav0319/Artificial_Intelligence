@@ -70,7 +70,7 @@ class Blackjack:
         self.player_1 = Player(u_target)
         self.player_2 = Player(u_target)
         self.moves = []
-        self.cards = [i for i in xrange(k+1)]
+        self.cards = [i for i in xrange(1, n+1)]
 
     def _construct_array(self):
         """
@@ -258,7 +258,7 @@ class Blackjack:
                 p1_array[pscore][oscore][drew][cards] += 1
             else:
                 p2_array[pscore][oscore][drew][cards] += 1
-            current_player = 2 if current_player == 1 else 1
+            current_player = (2 if current_player == 1 else 1)
 
     def clear(self):
         """
