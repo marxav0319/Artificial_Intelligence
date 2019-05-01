@@ -70,6 +70,7 @@ class Blackjack:
         self.player_1 = Player(u_target)
         self.player_2 = Player(u_target)
         self.moves = []
+        self.cards = [i for i in xrange(k+1)]
 
     def _construct_array(self):
         """
@@ -93,41 +94,118 @@ class Blackjack:
             empty_list.append(temp_1)
         return empty_list
 
-    def _sample(self):
+    def get_f(self, player, other):
+        """
+        Calculates the "f" array described in the assignment, which holds for any given state of
+        p1_score, p2_score, and last_player_drew, the ratio of times won drawing the number of cards
+        indicated by the position in the array.  Therefore, f[1] = the ratio of times won in the
+        current state after drawing 1 card.
+        """
+
+        print player.score, other.score, other.drew_last_turn
+        win_state = self.win_count[player.score][other.score][other.drew_last_turn]
+        lose_state = self.lose_count[player.score][other.score][other.drew_last_turn]
+        f = []
+        games_played_in_state = 0
+        for i in xrange(len(win_state)):
+            if win_state[i] + lose_state[i] == 0:
+                f.append(0.5)
+            else:
+                f.append(win_state[i] / float(win_state[i] + lose_state[i]))
+            games_played_in_state += win_state[i] + lose_state[i]
+        return f, games_played_in_state
+
+    def get_best_move(self, f):
+        """
+        Given the "f" array, determines the highest win ratio of all possible plays in the given
+        state.
+        """
+
+        best = -1
+        best_index = -1
+        for index, value in enumerate(f):
+            if value > best:
+                best = value
+                best_index = index
+        return best, best_index
+
+    def get_sum_of_other_moves(self, f, best_move_index):
+        """
+        Given the "f" array and the best_move of all enumerated in this state, sums the ratio of
+        wins drawing cards that are not the best move.
+        """
+
+        sum_of_other_moves = 0
+        for i in xrange(len(f)):
+            if i != best_move_index:
+                sum_of_other_moves += f[i]
+        return sum_of_other_moves
+
+    def calculate_probabilities(self, f, B, B_index, g, T):
+        """
+        Given the background arrays and values as outlined in the assignment, calculates the
+        probability of drawing a given number of cards from 0...(k+1) given the win ratio. 
+        """
+
+        probs = [None for i in xrange(len(f))]
+        p_best = (T * B + self.m) / (T * B + ((self.k + 1) * self.m))
+        for index, value in enumerate(f):
+            if index == B_index:
+                probs[index] = p_best
+            else:
+                probs[index] = (1-p_best) * (T * f[i] + self.m) / (g * T + self.k * self.m)
+        return probs
+
+    def sample(self, probs):
+        """
+        Randomly (yet less randomly over time) determines the number of cards to draw
+        """
+
+        u = [None for i in xrange(len(probs))]
+        u[0] = probs[0]
+        for i in xrange(1, len(probs)):
+            u[i] = sum(u[:i]) + probs[i]
+
+        target = random.random()
+        for index, p in enumerate(u):
+            if target < p:
+                return index
+
+    def get_number_of_cards_to_draw(self, player, other):
         """
         """
 
-        prob = 1/float(self.k + 1)
-        probs = [(prob * i) + prob for i in xrange(self.k + 1)]
-        x = random.random()
-        for i in xrange(self.k + 1):
-            if x < probs[i]:
-                return i
+        f, T = self.get_f(player, other)
+        b, b_index = self.get_best_move(f)
+        g = self.get_sum_of_other_moves(f, b_index)
+        probs = self.calculate_probabilities(f, b, b_index, g, T)
+        return self.sample(probs)
 
-    def draw(self):
+    def add_move(self, p1, p2, cards_drawn):
         """
         """
 
-        return self._sample()
+        self.moves.append([p1.score, p2.score, p2.drew_last_turn, cards_drawn])
 
-    def add_move(p1, p2, cards_drawn):
+    def draw_card(self):
         """
         """
 
-        self.moves.append([p1.score, p2.score, p1.drew_last_turn, cards_drawn])
+        return random.choice(self.cards)
 
     def player_plays(self, player, other):
         """
         """
 
-        card = self.draw()
-        self.add_move(player, other, card)
-        player.draw(card)
+        cards_to_draw = self.get_number_of_cards_to_draw(player, other)
+        self.add_move(player, other, cards_to_draw)
+        for i in xrange(cards_to_draw):
+            player.draw(self.draw_card())
 
         if player.lost_game:
             self.game_over = True
 
-        if card == 0:
+        if cards_to_draw == 0:
             player.drew_last_turn = 0
 
     def check_no_play_made(self):
@@ -173,10 +251,11 @@ class Blackjack:
 
         current_player = 1
         for element in self.moves:
+            pscore, oscore, drew, cards = element
             if current_player == 1:
-                p1_array[element[0], element[1], element[2], element[3]] += 1
+                p1_array[pscore][oscore][drew][cards] += 1
             else:
-                p2_array[element[0], element[1], element[2], element[3]] += 1
+                p2_array[pscore][oscore][drew][cards] += 1
             current_player = 2 if current_player == 1 else 1
 
     def clear(self):
@@ -204,8 +283,8 @@ def driver():
     """
 
     print
-    parser = argparse.ArgumentParser(description=('Blackjack game as described in programming'
-                                                  'assignment 4 for Artificial Intelligence with'
+    parser = argparse.ArgumentParser(description=('Blackjack game as described in programming '
+                                                  'assignment 4 for Artificial Intelligence with '
                                                   'Prof. Davis at NYU, Spring 2019'))
     parser.add_argument('N', help='The highest value card', type=int)
     parser.add_argument('LTarget', help='The lowest winning score', type=int)
@@ -216,6 +295,8 @@ def driver():
     args = parser.parse_args()
 
     blackjack = Blackjack(args.N, args.LTarget, args.UTarget, args.K, args.M, args.N_Games)
+    blackjack.run_simulation()
+    print blackjack.win_count
 
 if __name__ == '__main__':
     driver()
