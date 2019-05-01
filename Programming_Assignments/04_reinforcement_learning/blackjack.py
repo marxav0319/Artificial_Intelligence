@@ -102,7 +102,6 @@ class Blackjack:
         current state after drawing 1 card.
         """
 
-        print player.score, other.score, other.drew_last_turn
         win_state = self.win_count[player.score][other.score][other.drew_last_turn]
         lose_state = self.lose_count[player.score][other.score][other.drew_last_turn]
         f = []
@@ -185,7 +184,8 @@ class Blackjack:
         """
         """
 
-        self.moves.append([p1.score, p2.score, p2.drew_last_turn, cards_drawn])
+        if(p1.score < self.l_target and p2.score < self.l_target):
+            self.moves.append([p1.score, p2.score, p2.drew_last_turn, cards_drawn])
 
     def draw_card(self):
         """
@@ -202,7 +202,7 @@ class Blackjack:
         for i in xrange(cards_to_draw):
             player.draw(self.draw_card())
 
-        if player.lost_game:
+        if player.lost_game or (not player.lost_game and player.score >= self.l_target):
             self.game_over = True
 
         if cards_to_draw == 0:
@@ -223,7 +223,9 @@ class Blackjack:
                 self.game_over = True
             else:
                 self.player_plays(self.player_1, self.player_2)
-                if self.check_no_play_made():
+                if self.game_over:
+                    break
+                elif self.check_no_play_made():
                     self.game_over = True
                 else:
                     self.player_plays(self.player_2, self.player_1)
