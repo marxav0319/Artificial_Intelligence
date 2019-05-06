@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="github.css" type="text/css" />
+</head>
+<body>
+<h1 id="artificial-intelligence">Artificial Intelligence</h1>
+<h2 id="programming-assignment-4">Programming Assignment 4</h2>
+<p>Author: Mark Xavier (xaviem01)</p>
+<hr />
+<h2 id="requirements">Requirements:</h2>
+<ul>
+<li>Python-2.7</li>
+</ul>
+<hr />
+<h2 id="contents">Contents:</h2>
+<pre><code>04_Reinforcement_Learning
+|
+|-blackjack.py
+|-README.md
+|-README.html
+</code></pre>
+<hr />
+<h2 id="usage">Usage:</h2>
+<p>The function can be called with the following signature (running the <code>-h</code> flag will also display the output below):</p>
+<pre><code>&gt; python blackjack.py -h
+
+usage: blackjack.py [-h] [-v] [-e] N LTarget UTarget K M N_Games
+
+Blackjack game as described in programming assignment 4 for Artificial
+Intelligence with Prof. Davis at NYU, Spring 2019
+
+positional arguments:
+  N                    The highest value card
+  LTarget              The lowest winning score
+  UTarget              The highest winning score
+  K                    The maximum number of cards that can be drawn per turn
+  M                    A floating-point value
+  N_Games              The number of games to play
+
+optional arguments:
+  -h, --help           show this help message and exit
+  -v, --verbose        run with increased console ouptut
+  -e, --extra-verbose  runs per game console output</code></pre>
+<p>So then the script can be called as follows:</p>
+<pre><code>&gt; # Run with N = 2, LTarget = 4, UTarget = 5, K = 1, M = 4.0, N_Games = 10,000
+&gt; python blackjack.py 2 4 5 1 4.0 10000
+
+1 1 1 1
+1 1 1 1
+1 1 1 1
+1 1 1 1
+
+0.7361 0.3969 0.1302 0.0000
+0.5000 0.8045 0.3730 0.0053
+0.5000 0.9876 0.7325 0.5105
+0.5000 1.0000 0.9786 0.9886</code></pre>
+<p>There are also extra optional flags for verbose outputs. <code>-v</code> prints the win and lose arrays that are internally tracked after printing out the output above. The arrays are printed with index D = 1. The <code>-e</code> option is an extra-verbose option, that also outputs the state of each game after running each game and before clearing the state for the next game.</p>
+<h2 id="notes">Notes:</h2>
+<p>For some reason (perhaps due to the random number function) my values do not always converge near the Professor's examples. I've combed through and tried to deal with some cases. Some are not clear, for instance, in the event that both players pass, the game ends, but it's not clear who wins if both players draw. In such a case, a winner was picked arbitrarily, which may account for some of the off numbers.</p>
+<p>In other cases, certain states are never reached, therefore there are no probabilities or perfect moves for these players - these are chosen arbitrarily with a win probability of 0.5. In other words, if we ever encounter <code>win[p1_score][p2_score][p2_drew][j] + lose[p1_score][p2_score][p2_drew][j] == 0</code>, we assign this a probability of winning as 0.5.</p>
+</body>
+</html>
