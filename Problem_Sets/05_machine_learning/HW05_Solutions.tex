@@ -1,0 +1,33 @@
+\documentclass{article}
+
+\usepackage[margin=0.5in]{geometry}
+
+\title{Artificial Intelligence - Problem Set 5}
+\author{Mark Xavier (xaviem01)}
+
+\begin{document}
+	\maketitle
+	
+	\begin{enumerate}
+		\item Problem 1
+		\begin{enumerate}
+			\item For training, we walk through each example once, determine the classification to determine which centroid to compute, then convert the attributes to vectors and sum them.  Each of these summed vectors is then multiplied by one over the number of items in that classification.  Then based on input, training is simply $\approx O(N)$ running time, not taking into account the time for division.
+			
+			For testing, we take the new instance and find the distance between this instance and that of the centroids, then determine which centroid is closes.  There are $c$ centroids, and there are $k$ predictive attributes, each an element in the vectors.  Then, for $c$ centroids we have to determine the distance between two $k$ element arrays, leading to a running time of $\approx O(ck)$.
+			
+			\item The approach in cases of missing values is to simply use the values that have been obtained and compare them to corresponding values in other vectors.  If a new instance comes in $z = <a_1, \emptyset, a_3>$, then in all comparisons we simply grab the first and third element of each vector when we test distance.  During the training phase, we can simply use the attributes we have.  We could even remove attributes from the sets if they are missing from certain instances as long as we can avoid removing a large set of instances (for instance, if many instances do not include $a_2$ then we can simply remove $a_2$ from all instances) - this would lower some of the predictive power of our algorithm since we're removing information, but this would help in the case of missing attributes.
+			
+			\item \textbf{come back}
+			
+			\item \textbf{come back}
+			
+			\item The problem here is with the width of the windows given for $X.A$.  An example where this fails is simple, assume that the centroid calculated for $X.C = a$ is very close to $0$.  The centroid for $X.C = b$ is also close to $0$, at most a euclidean distance of 1 away from 0.  Now if a data point close to $0$ appears, we run into an issue, does it classify as $a$ or $b$?  If on the other hand the centroid for $C=a$ is extremely far from 0, we may categorize more values as $b$ than $a$ by mistake, since values closer to 0 are closer to category $b$ than $a$.
+			
+			This situation extends through the example, categories $a$ and $e$ have very large category windows, $b$ and $d$ have small category windows, and $c$ has a medium sized window.  The differing windows means that, at least distance-wise, points will appear closer to categories that they are not actually a part of, since any $X.A_i$ can take on any value within the given windows.
+			
+			\item One method for doing this is to compute exemplars by computing some combinations of the training data.  For example, every 2 or 3 vectors encountered in a given category $c$ can be averaged to find a mean vector, but this may cause issues for vectors very far apart.  Another method is to simply determine a halfway point between two vectors, and keep that as a centroid.  The latter method holds information about both vectors, and as many as $N-1$ of these can be created in linear time (we can obtain many more by finding distances between all vectors, but this running time is $\approx O(N^2)$.  Either of these sets of centroids stores some kind of information about the vectors used to compute them, and therefore can be used in place of the centroid(s) calculated by the prompt.
+			
+			\item \textbf{come back}
+		\end{enumerate}
+	\end{enumerate}
+\end{document}
