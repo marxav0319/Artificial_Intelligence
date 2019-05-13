@@ -74,9 +74,11 @@ def test_classifier(training_set=None):
     classifier = Classifier(training_set, 3)
     classifier.learn()
     accuracy = 0
+    f = lambda x, y: 'ok' if x == y else 'ERROR'
     for row in training_set:
         x = classifier.classify(row[:3])
-        print("<%.2f, %.2f, %.2f> classified as %d, labled %d" % (row[0], row[1], row[2], x, row[3]))
+        print("<%.2f, %.2f, %.2f> classified as %d, labled %d - %s"
+              % (row[0], row[1], row[2], x, row[3], f(x, row[3])))
         if x == row[3]:
             accuracy += 1
 

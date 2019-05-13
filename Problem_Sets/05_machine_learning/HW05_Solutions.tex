@@ -17,31 +17,33 @@
 			
 			\item The approach in cases of missing values is to simply use the values that have been obtained and compare them to corresponding values in other vectors.  If a new instance comes in $z = <a_1, \emptyset, a_3>$, then in all comparisons we simply grab the first and third element of each vector when we test distance.  During the training phase, we can simply use the attributes we have.  We could even remove attributes from the sets if they are missing from certain instances as long as we can avoid removing a large set of instances (for instance, if many instances do not include $a_2$ then we can simply remove $a_2$ from all instances) - this would lower some of the predictive power of our algorithm since we're removing information, but this would help in the case of missing attributes.
 			
-			\item Assuming that we generate vectors from a Gaussian distribution from a given mean and standard deviation, then we can cluster groups of vectors using that mean and deviation.  Then the generative model is that we have some categories that each have a vector that represents the mean and a vector representing the deviation.  Then through a stochastic process, we generate some number of vectors using that mean and deviation vector through each classification, and those generated vectors serve as our labeled data.
+			\item A probablistic generative model associated with this process is kind of a mix between the model used for k-means clustering and naive-bayes.  We can first choose a category, a, b, c, etc.  Choosing this category leads us to different distributions to sample from, that is, category a has a certain mean and standard deviation, b has a different one, and c has a different one.  Each of these means and deviations contributes to a gaussian distribution for each category from which to sample vectors from.  Then the whole process is to "spin a roulette wheel" as noted in class, choose a category, then randomly sample a vector from the resulting distribution.  We repeat this process to generate as many vectors as we want.
 			
-			\item We can get unpredictable results from the following set-up:
+			\item We can get unreasonable and/or unpredictable results from the following set-up:
 			
 			\begin{center}
 				\begin{tabular}{|c|c|}
 					\hline
 					Predictive Attribute & Classification \\
 					\hline
-					1 & b\\
+					$\approx 1$ & b\\
 					\hline
 					1 & a \\
 					\hline
 					2 & a \\
 					\hline
-					2 & c \\
+					$\approx 2$ & c \\
 					\hline
 				\end{tabular}
 			\end{center}
 			
 			In the case above, we see that category a actually sits in-between categories b and c, and that the distance from a to b and from a to c is 1.  Then when the centroid for a is calculated, it is calculated as 1.5, which is 0.5 away from centroid a.  However, this is directly on the classification line for b and c, each of which are 0 away from either point in a (we can even make them 0.1 or such away).  This means that the centroid distances for b and c will classify both points in a as being in either b or c.  Therefore, though category a exists in training and is linearly separable, without enough points to define better centroids for b and c, we classify everything as b or c.
 			
-			\item The problem here is with the width of the windows given for $X.A$.  An example where this fails is simple, assume that the centroid calculated for $X.C = a$ is very close to $0$.  The centroid for $X.C = b$ is also close to $0$, at most a euclidean distance of 1 away from 0.  Now if a data point close to $0$ appears, we run into an issue, does it classify as $a$ or $b$?  If on the other hand the centroid for $C=a$ is extremely far from 0, we may categorize more values as $b$ than $a$ by mistake, since values closer to 0 are closer to category $b$ than $a$.
+			Really this works if the points are shifted slightly to (probably making this more obviously linearly separable).  That is the meaning of the approx symbol $(\approx)$.  In this case we still run into the same problem, classification for a relies on centroid 1.5, but for b and c the centroids are the points themselves, which are closer to the individual points of category a than the centroid calculated for a.
 			
-			This situation extends through the example, categories $a$ and $e$ have very large category windows, $b$ and $d$ have small category windows, and $c$ has a medium sized window.  The differing windows means that, at least distance-wise, points will appear closer to categories that they are not actually a part of, since any $X.A_i$ can take on any value within the given windows.
+			\item I take for given that the best place to orient a centroid is in the exact center of it's window (horizontally, across the x-axis).  I can provide a minor explanation - according to the generative process defined above, we choose vectors by sampling from a distribution with a given $\mu$ and $\sigma$.  The given windows define for us what that mean and std. dev. look like, and in order to be as close as possible to all possible points that could be sampled, the centroid must be placed in the center of the window.
+			
+			Now, with this given information, we note that if we place the centroids in a central location for each given window, firstly we cannot define centroids for categories a and e as their window of possible values is infinite.  We can assume however, that the centroid is as close as possible to the window that is closed (0 for category a, 6 for category e).  We could also place them further out, it makes no difference to us.  The real issue here is that the inner windows are not of the same size - category b has a window size of $\approx 1$, although technically it is infinite if this is a real number line, however category c has a window size of $\approx 4$.  This means that, even with an ideal centroid placement, category b's centroid has a much shorter reach to category c's lower window than c's centroid, which will lead to points being incorrectly assigned to b instead of c.  We may try to alleviate this by moving c's centroid, however the same issue occurs on the other side with category d, which can bleed into c's upper window.  Since no matter where we move the given centroids we get issues labeling category c, we find that there is no set of centroids (one per category) that can correctly classify all possible vectors created from our generative process.
 			
 			\item One method for doing this is to compute exemplars by computing some combinations of the training data.  For example, every 2 or 3 vectors encountered in a given category $c$ can be averaged to find a mean vector, but this may cause issues for vectors very far apart.  Another method is to simply determine a halfway point between two vectors, and keep that as a centroid.  The latter method holds information about both vectors, and as many as $N-1$ of these can be created in linear time (we can obtain many more by finding distances between all vectors, but this running time is $\approx O(N^2)$.  Either of these sets of centroids stores some kind of information about the vectors used to compute them, and therefore can be used in place of the centroid(s) calculated by the prompt.
 			
